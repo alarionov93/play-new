@@ -1,0 +1,47 @@
+@import play.mvc.Http.Request
+@(tasks: List[Task], taskForm: Form[Task])(implicit request: Request, messages: play.i18n.Messages)
+
+@import helper._
+
+@main("Tasks") {
+  <p>Tasks list</p>
+  <p>@tasks.size() task(s)</p>
+    
+    <ul>
+        @for(task <- tasks) {
+            <div>
+                <div style="float:left; padding: 5px;">
+                    @task.label                
+                </div>
+                <div style="float:left; padding: 5px;">
+                    @task.title
+                </div>
+                <div style="float:left; padding: 5px;">
+                    @task.numberOfPages
+                </div>
+                <div style="float:left; padding: 5px;">
+                    @task.dateCreated
+                </div>
+                
+                @form(routes.TasksController.deleteTask(task.id)) {
+                    @CSRF.formField
+                    <input type="submit" value="Delete">
+                }
+            </div>
+        }
+    </ul>
+    
+    <h2>Add a new task</h2>
+    
+    @form(routes.TasksController.newTask()) {
+        @CSRF.formField
+
+        @inputText(taskForm("label"))
+        @inputText(taskForm("title")) 
+        @inputText(taskForm("numberOfPages")) 
+        @inputDate(taskForm("dateCreated")) 
+        
+        <input type="submit" value="Create">
+        
+    }
+}
